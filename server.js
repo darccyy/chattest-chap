@@ -10,11 +10,6 @@ const GithubStrategy = require("passport-github").Strategy;
 const {stringify} = require("flatted");
 const _ = require("underscore");
 
-/* Local files */
-const Chat = require("./chat");
-const getGitHubData = require("./api");
-const {decircleJSON} = require("./functions");
-
 /* Import env variables */
 require("dotenv").config();
 const port = process.env.PORT;
@@ -22,6 +17,12 @@ const domain = process.env.LOCAL
   ? "localhost:" + port
   : "chat-test-auth.herokuapp.com";
 const COOKIE = process.env.PROJECT_DOMAIN;
+
+/* Import local files */
+const Chat = require("./js/database");
+const getGitHubData = require("./js/api");
+const Database = require("./js/database");
+const {decircleJSON} = require("./js/functions");
 
 /* Start express app */
 const app = express();
@@ -37,7 +38,7 @@ app.engine(".hbs", exphbs({extname: ".hbs"}));
 app.set("views", __dirname + "/views");
 app.set("view engine", ".hbs");
 
-/* Create authentication */
+/* Create authentication */ //TODO Move to auth.js
 let scopes = ["notifications", "user:email", "read:org", "repo"];
 passport.use(
   new GithubStrategy(
@@ -96,7 +97,7 @@ app.get("/setcookie", function (req, res) {
   res.redirect("/");
 });
 
-/* Access public files */
+/* Access public files */ //TODO Move to pages.js (Rest of app.get)
 app.use("/public", express.static(__dirname + "/public"));
 
 /* Home page */
@@ -109,8 +110,8 @@ app.get("/", async (req, res) => {
     let githubData;
     try {
       githubData = await getGitHubData(data.session.token);
-    } catch (error) {
-      githubData = {error};
+    } catch (err) {
+      githubData = {err};
       console.error("GitHubData Error: " + err);
     }
     _.extend(data, githubData);
@@ -123,6 +124,58 @@ app.get("/", async (req, res) => {
   data.json = stringify(data, null, 2);
 
   res.render("main", {layout: false, ...data});
+});
+
+app.get("/postmsg", async (req, res) => {
+  var {channel, name, msg} = req.query;
+  channel = "root";
+  name = "unsn";
+
+  var session = req.cookies[COOKIE] && JSON.parse(req.cookies[COOKIE]);
+  if (!session || !session.token) {
+    res.sendStatus(401);
+  }
+
+  let githubData;
+  try {
+    githubData = await getGitHubData(session.token);
+  } catch (err) {
+    githubData = {err};
+    console.error("GitHubData Error: " + err);
+  }
+
+  const collection = Database.db(channel).collection("messages");
+  collection
+    .insertOne({
+      channel,
+      name: session.user.name,
+      user: session.user.login,
+      msg,
+      time: Date.now(),
+    })
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(err => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+});
+
+app.get("/getmsg", (req, res) => {
+  var {channel} = req.query;
+  channel = "root";
+  console.log(`Get message`);
+
+  const collection = Database.db(channel).collection("messages");
+  collection.find({}).toArray(function (error, result) {
+    if (error) {
+      console.error(error);
+      res.sendStatus(500);
+    } else {
+      res.send(JSON.stringify(result));
+    }
+  });
 });
 
 /* Run server */

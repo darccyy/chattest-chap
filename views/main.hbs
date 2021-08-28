@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
 
-  <body>
+  <body onload="refresh()">
     <header>
       <h1>Chat test</h1>
     </header>
@@ -37,15 +37,14 @@
         <section>
           <input type="text" value="TEST_123" id="msg" />
           <button onclick="send()">Send Message</button>
-          <button onclick="refresh()">Refresh</button>
         </section>
 
-        <div id="msgs">
-
-        </div>
       {{else}}
         <a class="container" href="/auth/github">Login with GitHub</a>
       {{/if}}
+
+      <button onclick="refresh()">Refresh</button>
+      <div id="msgs"></div>
 
     </main>
 
