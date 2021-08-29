@@ -1,7 +1,7 @@
 {
-  "name": "git-auth-test",
+  "name": "chattest-chap",
   "version": "0.1.0",
-  "description": "Testing if GitHub auth works for express",
+  "description": "Chap app 😎",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,12 +18,10 @@
   },
   "homepage": "https://github.com/darccyy/git-auth-test#readme",
   "dependencies": {
-    "connect-ensure-login": "^0.1.1",
     "cookie-parser": "^1.4.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.3",
-    "express-hbs": "^2.4.0",
     "express-session": "^1.17.2",
     "flatted": "^3.2.2",
     "github-api": "^3.4.0",

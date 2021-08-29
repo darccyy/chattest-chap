@@ -1,9 +1,8 @@
 /* Import dependencies */
 const express = require("express");
-const exphbs = require("express-handlebars"); // Read .hbs file
-
-const cookieParser = require("cookie-parser"); // Parse cookies from client
 const expressSession = require("express-session"); // Uses cookies to save session in client
+const exphbs = require("express-handlebars"); // Read .hbs file
+const cookieParser = require("cookie-parser"); // Parse cookies from client
 const crypto = require("crypto"); // Generates random string
 const {stringify} = require("flatted"); // Stringifies circular JSON
 const _ = require("underscore"); // Helpful functions
@@ -13,7 +12,7 @@ require("dotenv").config(); // Read ./.env file (development)
 const PORT = process.env.PORT;
 const DOMAIN = process.env.LOCAL
   ? "localhost:" + PORT
-  : "chat-test-auth.herokuapp.com";
+  : "chattest-chop.herokuapp.com";
 const COOKIE = process.env.PROJECT_DOMAIN; //? What is this supposed to be? (It is 'biscuit' atm)
 
 /* Import local files */
@@ -218,9 +217,9 @@ async function main() {
 
   /* Run server */
   app.listen(PORT, () => {
-    console.log(`Server is running at http://${DOMAIN}`);
+    console.log(`Server is running at http://${DOMAIN}\n` + "=".repeat(20) + "\n");
   });
 }
 
-console.log("\nStarting...");
+console.log("\n" + "=".repeat(20) + "\nStarting...");
 main();
