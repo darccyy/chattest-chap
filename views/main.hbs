@@ -3,51 +3,90 @@
   <head>
     <title>Chat test</title>
     <link rel="shortcut icon" href="#" />
+
     <script src="public/js/jquery.js"></script>
     <script src="public/js/client.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/v4-shims.js"></script>
+
+    <link rel="stylesheet" href="public/style/css/style.css" />
+
     <meta name="description" content="Github API app with Nodejs Server." />
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta type="datakey" name="session" value='{{{json session}}}' />
   </head>
 
-  <body onload="refresh()">
-    <header>
-      <h1>Chat test</h1>
-    </header>
+  <body onload="init()">
 
     <main>
 
-      {{#if session}}
-        <p>
-          You are now logged in as
+      <div class="top-bar">
+        {{#if session}}
+
+        <span class="name">
           {{session.user.name}}
-        </p>
-        <p>
-          <a href="/logoff">Sign out</a>
-        </p>
-        <details>
-          <summary>User Details</summary>
+        </span>
 
-          <code>
-            {{session.userJson}}
-          </code>
-        </details>
+        <button onclick="location.href += 'logoff'">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
 
-        <section>
-          <input type="text" value="TEST_123" id="msg" />
-          <button onclick="send()">Send Message</button>
-        </section>
+        {{else}}
 
-      {{else}}
-        <a class="container" href="/auth/github">Login with GitHub</a>
+        <span class="name">
+          <a href="/auth/github">Login with GitHub</a>
+        </span>
+
+        {{/if}}
+
+        <button onclick="refresh()">
+          <i class="fa fa-refresh"></i>
+        </button>
+      </div>
+
+      {{#if session}}
+
+      <section>
+        <input type="text" value="TEST_123" id="msg" autofocus />
+        <button onclick="send()">
+          <i class="fa fa-arrow-circle-right"></i>
+        </button>
+      </section>
+
       {{/if}}
 
-      <button onclick="refresh()">Refresh</button>
       <div id="msgs"></div>
 
     </main>
 
   </body>
+
+  {{!-- Templates, will not show normally --}}
+  <components style="display:none;visibility:none;">
+    <comp name="msg">
+      <article class="msg {self}">
+        <wrapper>
+          <header>
+            <h1>
+              {name}
+            </h1>
+            |
+            <code>
+              {user}
+            </code>
+            <icon>
+              {icon}
+            </icon>
+          </header>
+          <content>
+            {content}
+          </content>
+        </wrapper>
+      </article>
+    </comp>
+  </components>
 
 </html>

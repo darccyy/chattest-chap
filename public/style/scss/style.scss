@@ -1,0 +1,57 @@
+body {
+  background-color: #222;
+}
+
+* {
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input,
+button {
+  padding: 5px;
+  border: none;
+  background-color: #333;
+}
+
+.msg {
+  display: flex;
+  width: 100%;
+  margin: 20px 0;
+  // background-color: yellow;
+  
+  &.self {
+    justify-content: right;
+  }
+
+  wrapper {
+    display: inline-block;
+    min-width: 10%;
+    max-width: 90%;
+    padding: 15px;
+    border-radius: 20px;
+    background-color: #333;
+    border-bottom: 6px solid #181818;
+    // background-color: blue;
+
+    header {
+
+      h1,
+      code {
+        display: inline;
+        font-size: 20px;
+      }
+
+      code {
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.top-bar {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}

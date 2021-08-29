@@ -1,0 +1,48 @@
+body {
+  background-color: #222;
+}
+
+* {
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input,
+button {
+  padding: 5px;
+  border: none;
+  background-color: #333;
+}
+
+.msg {
+  display: flex;
+  width: 100%;
+  margin: 20px 0;
+}
+.msg.self {
+  justify-content: right;
+}
+.msg wrapper {
+  display: inline-block;
+  min-width: 10%;
+  max-width: 90%;
+  padding: 15px;
+  border-radius: 20px;
+  background-color: #333;
+  border-bottom: 6px solid #181818;
+}
+.msg wrapper header h1,
+.msg wrapper header code {
+  display: inline;
+  font-size: 20px;
+}
+.msg wrapper header code {
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 500;
+}
+
+.top-bar {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
