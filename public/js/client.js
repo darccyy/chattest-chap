@@ -1,5 +1,10 @@
 /* Global variables */
 var session;
+var global = {
+  pageLoad: Date.now(),
+  once_post: true,
+  lastSent: Date.now(),
+};
 
 /* Run on load */
 function init() {
@@ -9,19 +14,25 @@ function init() {
   } else {
     session = null;
   }
-  content = $("#msg").val("");
+  content = $("#msg").html("");
   refresh();
 }
 
 /* Post a message */
 function send() {
-  content = $("#msg").val();
+  validateMessage();
+  content = $("#msg").html();
+  channel = $("#channel").val();
   console.log("Send message: ", content);
+
+  $("#msg").html("");
 
   $.ajax({
     url: "postmsg",
     data: {
       content,
+      channel,
+      userData: session.user,
     },
     success: res => {
       console.log(res);
@@ -41,7 +52,9 @@ function refresh() {
 
   $.ajax({
     url: "getmsg",
-    data: {},
+    data: {
+      channel: $("#channel").val(),
+    },
     success: res => {
       try {
         JSON.parse(res);
@@ -54,8 +67,8 @@ function refresh() {
       let str = "";
       /* res = [
         {
-          name: "NameHere",
-          user: "username_login",
+          name: "Darcy",
+          user: "darccyy",
           content:
             "This is an example of the message content. This is what it looks like 😀 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error obcaecati dolorem eaque alias ratione praesentium a nostrum eum officia voluptatem fugit ducimus cupiditate sapiente",
         },
@@ -71,10 +84,10 @@ function refresh() {
         },
       ]; */
       for (i = res.length - 1; i >= 0; i--) {
-        // console.log(session, res[i].user === session.user);;
         str += getComponent("msg", {
-          self: (session && res[i].user === session.user.login) ? "self" : "",
+          self: session && res[i].user === session.user.login ? "self" : "",
           icon: "",
+          avatar: `src="${(res[i].userData && res[i].userData.avatar_url) || "#"}"`,
           ...res[i],
         });
       }
@@ -92,7 +105,9 @@ function delall() {
 
   $.ajax({
     url: "deleteallmsg",
-    data: {},
+    data: {
+      channel: $("#channel").val(),
+    },
     success: res => {
       console.warn("Deleted all messages");
       refresh();
@@ -113,4 +128,31 @@ function getComponent(name, format) {
     html = html.split(`{${i}}`).join(format[i]);
   }
   return html;
+}
+
+/* Validate message input text */
+function msgKeyDown(e) {
+  if (e.key == "Enter") {
+    if (!e.shiftKey) {
+      if (global.once_post) {
+        global.once_post = false;
+        send();
+      }
+      e.preventDefault();
+    }
+  }
+}
+
+function msgKeyUp(e) {
+  if (e.key == "Enter") {
+    global.once_post = true;
+  }
+}
+
+function msgChange() {
+  validateMessage();
+}
+
+function validateMessage() {
+
 }

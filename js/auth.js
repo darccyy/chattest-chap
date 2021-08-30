@@ -1,7 +1,7 @@
 const GithubStrategy = require("passport-github").Strategy;
 const passport = require("passport");
 
-function createAuth(app, DOMAIN, COOKIE) {
+function createAuth(app, URL, COOKIE) {
   /* Create authentication */
   let scopes = ["notifications", "user:email", "read:org", "repo"];
   passport.use(
@@ -9,7 +9,7 @@ function createAuth(app, DOMAIN, COOKIE) {
       {
         clientID: process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: `http://${DOMAIN}/login/github/return`,
+        callbackURL: `${URL}/login/github/return`,
         scope: scopes.join(" "),
       },
       function (token, tokenSecret, profile, cb) {

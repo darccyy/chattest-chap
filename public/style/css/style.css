@@ -11,25 +11,121 @@ input,
 button {
   padding: 5px;
   border: none;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  border-radius: 5px;
   background-color: #333;
+}
+.icon:hover {
+  background-color: #383838;
+}
+.icon:active {
+  background-color: #444;
+}
+
+input[type=text] {
+  height: 30px;
+  font-size: 20px;
+}
+
+#header {
+  height: 30px;
+  margin-top: -5px;
+  margin-bottom: 10px;
+}
+#header h1 {
+  display: inline;
+  font-weight: 500;
+  font-size: 20px;
+}
+#header h1 input {
+  margin-left: -10px;
+  font-size: 20px;
+  outline: none;
+  background-color: #0000;
+}
+#header .top-bar {
+  position: absolute;
+  display: inline;
+  height: 30px;
+  right: 5px;
+}
+#header .top-bar .name {
+  font-size: 20px;
+}
+#header .top-bar .button-contain {
+  display: inline;
+  height: 30px;
+}
+
+.msg-contain {
+  display: flex;
+  justify-content: center;
+}
+.msg-contain wrapper {
+  display: flex;
+  width: calc(100% - 40px);
+  min-height: 30px;
+  height: calc(100% - 30px);
+  border-radius: 15px;
+  background-color: #333;
+}
+.msg-contain wrapper:focus-within {
+  background-color: #444;
+}
+.msg-contain wrapper #msg {
+  display: block;
+  width: calc(100% - 40px);
+  padding: 10px;
+  font-size: 16px;
+  overflow-y: hidden;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  outline: none;
+}
+.msg-contain wrapper button {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 2px;
+  border-radius: 100%;
 }
 
 .msg {
   display: flex;
   width: 100%;
   margin: 20px 0;
+  margin-bottom: -5px;
 }
 .msg.self {
   justify-content: right;
+}
+.msg.self wrapper {
+  background-color: #383838;
+  border-bottom: 6px solid #1C1C1C;
 }
 .msg wrapper {
   display: inline-block;
   min-width: 10%;
   max-width: 90%;
   padding: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   border-radius: 20px;
   background-color: #333;
   border-bottom: 6px solid #181818;
+}
+.msg wrapper header {
+  margin-bottom: 5px;
+}
+.msg wrapper header img {
+  width: 20px;
+  margin-bottom: -4px;
+  border: 1px solid #181818;
+  border-radius: 100%;
 }
 .msg wrapper header h1,
 .msg wrapper header code {
@@ -40,9 +136,56 @@ button {
   font-family: "Courier New", Courier, monospace;
   font-weight: 500;
 }
+.msg wrapper content {
+  font-size: 18px;
+}
 
-.top-bar {
-  position: absolute;
-  top: 5px;
+footer {
+  position: fixed;
+  bottom: 5px;
   right: 5px;
+  width: 120px;
+  padding: 2px;
+  border-radius: 10px;
+  background-color: #181818C0;
+  backdrop-filter: brightness(500%);
+}
+footer img {
+  width: 100%;
+  filter: invert(100%);
+  opacity: 40%;
+}
+
+@media (max-width: 500px) {
+  #header {
+    height: 60px;
+  }
+  #header .top-bar {
+    top: 30px;
+  }
+}
+@media (max-width: 370px) {
+  #header h1 .title {
+    display: none;
+  }
+  #header h1 input {
+    margin-left: -5px;
+  }
+}
+@media (max-width: 300px) {
+  #header .top-bar {
+    left: 8px;
+  }
+  #header .top-bar .name {
+    display: inline;
+  }
+  #header .top-bar .button-contain {
+    position: absolute;
+    right: 3px;
+  }
+}
+@media (max-width: 200px) {
+  #header .top-bar .name {
+    display: none;
+  }
 }

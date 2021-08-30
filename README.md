@@ -16,3 +16,8 @@ Create `.env` file next to `app.js`
 Add secret codes
 
 Commit and create pull request :)
+
+# To Do
+
+- Add 404
+- Fix CSS

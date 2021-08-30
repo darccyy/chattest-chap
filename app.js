@@ -1,6 +1,6 @@
 /* Import dependencies */
 const express = require("express");
-const expressSession = require("express-session"); // Uses cookies to save session in client
+const expressSession = require("express-session"); // Uses cookies to save session in client //TODO Replace with cookie-session
 const exphbs = require("express-handlebars"); // Read .hbs file
 const cookieParser = require("cookie-parser"); // Parse cookies from client
 const crypto = require("crypto"); // Generates random string
@@ -10,10 +10,11 @@ const _ = require("underscore"); // Helpful functions
 /* Import env variables */
 require("dotenv").config(); // Read ./.env file (development)
 const PORT = process.env.PORT;
-const DOMAIN = process.env.LOCAL
-  ? "localhost:" + PORT
-  : "chattest-chop.herokuapp.com";
-const COOKIE = process.env.PROJECT_DOMAIN; //? What is this supposed to be? (It is 'biscuit' atm)
+const URL = process.env.LOCAL
+  ? "http://localhost:" + PORT
+  : "https://chattest-chop.herokuapp.com";
+// const COOKIE = process.env.PROJECT_DOMAIN; //? What is this supposed to be? (It is 'biscuit' atm)
+const COOKIE = "biscuit";
 
 /* Import local files */
 const Database = require("./js/database"); // Database functions (MongoDB)
@@ -28,11 +29,11 @@ async function main() {
 
   /* Run other file functions */
   const dbClient = await Database.init();
-  const passport = Auth.createAuth(app, DOMAIN, COOKIE);
+  const passport = Auth.createAuth(app, URL, COOKIE);
 
   /* Create Handlebars renderer */
   const hbs = exphbs.create({
-    layoutsDir: __dirname + "/views",
+    layoutsDir: __dirname + "/public/views",
   });
   app.engine(
     ".hbs",
@@ -52,11 +53,12 @@ async function main() {
       },
     })
   );
-  app.set("views", __dirname + "/views");
+  app.set("views", __dirname + "/public/views");
   app.set("view engine", ".hbs");
 
-  /* Start cookie parser */
+  /* Start cookie parser and express session */
   app.use(cookieParser());
+  app.set("trust proxy", 1);
   app.use(
     expressSession({
       secret: crypto.randomBytes(64).toString("hex"),
@@ -103,8 +105,7 @@ async function main() {
   //* Requests
   /* Post message to database */
   app.get("/postmsg", async (req, res) => {
-    var {channel, content} = req.query;
-    channel = "root";
+    var {channel, content, userData} = req.query;
 
     var session = req.cookies[COOKIE] && JSON.parse(req.cookies[COOKIE]);
     if (!session || !session.token) {
@@ -126,6 +127,7 @@ async function main() {
         name: session.user.name,
         user: session.user.login,
         content,
+        userData,
         time: Date.now(),
       })
       .then(() => {
@@ -140,7 +142,6 @@ async function main() {
   /* Get all messages from database */
   app.get("/getmsg", (req, res) => {
     var {channel} = req.query;
-    channel = "root";
 
     const collection = dbClient.db(channel).collection("messages");
     collection.find({}).toArray(function (error, result) {
@@ -156,7 +157,6 @@ async function main() {
   /* Delete all messages from database */
   app.get("/deleteallmsg", async (req, res) => {
     var {channel} = req.query;
-    channel = "root";
 
     var session = req.cookies[COOKIE] && JSON.parse(req.cookies[COOKIE]);
     if (!session || !session.token) {
@@ -203,7 +203,12 @@ async function main() {
   );
 
   app.get("/setcookie", function (req, res) {
-    if (req.session) {
+    if (
+      req.session
+      && req.session.passport
+      && req.session.passport.user
+      && req.session.passport.user.profile
+    ) {
       res.cookie(
         COOKIE,
         JSON.stringify({
@@ -215,9 +220,16 @@ async function main() {
     res.redirect("/");
   });
 
+  app.get("/removecookie", function (req, res) {
+    res.clearCookie(COOKIE, "");
+    res.clearCookie(URL, "");
+    res.clearCookie("https://localhost:3000", "");
+    res.redirect("/");
+  });
+
   /* Run server */
   app.listen(PORT, () => {
-    console.log(`Server is running at http://${DOMAIN}\n` + "=".repeat(20) + "\n");
+    console.log(`Server is running at ${URL}\n` + "=".repeat(20) + "\n");
   });
 }
 

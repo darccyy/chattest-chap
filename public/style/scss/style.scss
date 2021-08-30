@@ -11,17 +11,124 @@ input,
 button {
   padding: 5px;
   border: none;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  border-radius: 5px;
   background-color: #333;
+  // background-color: red;
+
+  &:hover {
+    background-color: #383838;
+  }
+
+  &:active {
+    background-color: #444;
+  }
+}
+
+input[type="text"] {
+  height: 30px;
+  font-size: 20px;
+}
+
+#header {
+  height: 30px;
+  margin-top: -5px;
+  margin-bottom: 10px;
+  // background-color: yellow;
+
+  h1 {
+    display: inline;
+    font-weight: 500;
+    font-size: 20px;
+    // background-color: cyan;
+
+    input {
+      margin-left: -10px;
+      font-size: 20px;
+      outline: none;
+      background-color: #0000;
+    }
+  }
+
+  .top-bar {
+    position: absolute;
+    display: inline;
+    height: 30px;
+    right: 5px;
+    // background-color: lime;
+
+    .name {
+      font-size: 20px;
+      // background-color: magenta;
+    }
+
+    .button-contain {
+      display: inline;
+      height: 30px;
+      // background-color: red;
+    }
+  }
+}
+
+.msg-contain {
+  display: flex;
+  justify-content: center;
+  // background-color: yellow;
+
+  wrapper {
+    display: flex;
+    width: calc(100% - 40px);
+    min-height: 30px;
+    height: calc(100% - 30px);
+    border-radius: 15px;
+    background-color: #333;
+    // background-color: lime;
+
+    &:focus-within {
+      background-color: #444;
+    }
+
+    #msg {
+      display: block;
+      width: calc(100% - 40px);
+      padding: 10px;
+      font-size: 16px;
+      overflow-y: hidden;
+      overflow-wrap: break-word;
+      white-space: pre-wrap;
+      outline: none;
+      // background-color: magenta;
+    }
+
+    button {
+      margin-top: auto;
+      margin-bottom: auto;
+      margin-right: 2px;
+      border-radius: 100%;
+      // background-color: blue;
+    }
+  }
 }
 
 .msg {
   display: flex;
   width: 100%;
   margin: 20px 0;
+  margin-bottom: -5px;
   // background-color: yellow;
-  
+
   &.self {
     justify-content: right;
+
+    wrapper {
+      background-color: #383838;
+      border-bottom: 6px solid #1C1C1C;
+    }
   }
 
   wrapper {
@@ -29,12 +136,22 @@ button {
     min-width: 10%;
     max-width: 90%;
     padding: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     border-radius: 20px;
     background-color: #333;
     border-bottom: 6px solid #181818;
     // background-color: blue;
 
     header {
+      margin-bottom: 5px;
+
+      img {
+        width: 20px;
+        margin-bottom: -4px;
+        border: 1px solid #181818;
+        border-radius: 100%;
+      }
 
       h1,
       code {
@@ -47,11 +164,79 @@ button {
         font-weight: 500;
       }
     }
+
+    content {
+      font-size: 18px;
+    }
   }
 }
 
-.top-bar {
-  position: absolute;
-  top: 5px;
+footer {
+  position: fixed;
+  bottom: 5px;
   right: 5px;
+  width: 120px;
+  padding: 2px;
+  border-radius: 10px;
+  background-color: #181818C0;
+  backdrop-filter: brightness(500%);
+
+  img {
+    width: 100%;
+    filter: invert(100%);
+    opacity: 40%
+  }
+}
+
+@media (max-width: 500px) {
+  #header {
+    height: 60px;
+
+    .top-bar {
+      top: 30px;
+    }
+  }
+}
+
+@media (max-width: 370px) {
+  #header {
+    h1 {
+      .title {
+        display: none;
+      }
+
+      input {
+        margin-left: -5px;
+      }
+    }
+  }
+}
+
+@media (max-width: 300px) {
+  #header {
+    .top-bar {
+      left: 8px;
+
+      .name {
+        display: inline;
+
+      }
+
+      .button-contain {
+        position: absolute;
+        right: 3px;
+        // top: 30px;
+      }
+    }
+  }
+}
+
+@media (max-width: 200px) {
+  #header {
+    .top-bar {
+      .name {
+        display: none;
+      }
+    }
+  }
 }
