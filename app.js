@@ -204,10 +204,10 @@ async function main() {
 
   app.get("/setcookie", function (req, res) {
     if (
-      req.session
-      && req.session.passport
-      && req.session.passport.user
-      && req.session.passport.user.profile
+      req.session &&
+      req.session.passport &&
+      req.session.passport.user &&
+      req.session.passport.user.profile
     ) {
       res.cookie(
         COOKIE,
@@ -224,6 +224,12 @@ async function main() {
     res.clearCookie(COOKIE, "");
     res.clearCookie(URL, "");
     res.clearCookie("https://localhost:3000", "");
+    res.redirect("/");
+  });
+
+  //* 404: Must be after all others
+  //TODO Add a proper 404 page
+  app.use(function (req, res) {
     res.redirect("/");
   });
 

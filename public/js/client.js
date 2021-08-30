@@ -18,11 +18,25 @@ function init() {
   refresh();
 }
 
+var mouse = {};
+addEventListener("mousemove", e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+addEventListener("mousedown", e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+addEventListener("mouseup", e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
 /* Post a message */
 function send() {
   validateMessage();
   content = $("#msg").html();
-  channel = $("#channel").val();
+  channel = $("#channel").html();
   console.log("Send message: ", content);
 
   $("#msg").html("");
@@ -47,13 +61,14 @@ function send() {
 
 /* Refresh and load messages */
 function refresh() {
-  console.log("REFRESH!");
+  // console.log("REFRESH!");
   $("#msgs").html("");
+  $("#btn-refresh").addClass("active");
 
   $.ajax({
     url: "getmsg",
     data: {
-      channel: $("#channel").val(),
+      channel: $("#channel").html(),
     },
     success: res => {
       try {
@@ -87,14 +102,19 @@ function refresh() {
         str += getComponent("msg", {
           self: session && res[i].user === session.user.login ? "self" : "",
           icon: "",
-          avatar: `src="${(res[i].userData && res[i].userData.avatar_url) || "#"}"`,
+          avatar: `src="${
+            (res[i].userData && res[i].userData.avatar_url) || "#"
+          }"`,
           ...res[i],
         });
       }
       $("#msgs").html(str);
+      $("#btn-refresh").removeClass("active");
     },
     error: err => {
       console.error(err);
+      $("#btn-refresh").removeClass("active");
+      refresh();
     },
   });
 }
@@ -106,7 +126,7 @@ function delall() {
   $.ajax({
     url: "deleteallmsg",
     data: {
-      channel: $("#channel").val(),
+      channel: $("#channel").html(),
     },
     success: res => {
       console.warn("Deleted all messages");
@@ -153,6 +173,81 @@ function msgChange() {
   validateMessage();
 }
 
-function validateMessage() {
+function validateMessage() {}
 
+/* Validate channel name */
+function changeChannel() {
+  if (validateChannel()) {
+    refresh();
+  }
+}
+
+/* Set channel to 'root' when unfocused */
+function changeChannelBlur() {
+  if (!validateChannel(true) || $("#channel").html() === ":") {
+    $("#channel").html("root");
+  }
+}
+
+/* Focus channel element when container clicked */
+function focusChannel() {
+  if (!$("#channel").html()) {
+    $("#channel").focus();
+    return;
+  }
+  
+  /* Decide which side to place caret on */
+  rect0 = $(".channel-contain")[0].getBoundingClientRect();
+  rect1 = $("#channel")[0].getBoundingClientRect();
+  if (
+    mouse.x >= rect0.left &&
+    mouse.x < rect0.left + rect0.width &&
+    mouse.y >= rect0.top &&
+    mouse.y < rect0.top + rect0.height &&
+    !(mouse.x >= rect1.left && mouse.x < rect1.left + rect1.width)
+  ) {
+    if (mouse.x < rect0.left + rect0.width / 2) {
+      $("#channel").setCaret(0);
+    } else {
+      $("#channel").setCaret($("#channel").html().length);
+    }
+  }
+}
+
+/* Set channel to valid string */
+function validateChannel(ignoreSame) {
+  old = $("#channel").html();
+  caret = $("#channel").getCaret();
+
+  admin = false;
+  if ($("#channel").html()[0] === ":") {
+    admin = true;
+    $("#channel").html($("#channel").html().slice(1, 32));
+  }
+
+  $("#channel").html(
+    $("#channel")
+      .html()
+      .toLowerCase()
+      .replace(/[^a-z0-9-_]/gm, "")
+  );
+
+  if (admin) {
+    $("#channel").html(":" + $("#channel").html());
+  }
+
+  if ($("#channel").html().length > 0) {
+    caret -= old.length - $("#channel").html().length;
+    $("#channel").html($("#channel").html().slice(0, 32));
+
+    $("#channel").setCaret(
+      Math.max(0, Math.min(caret, $("#channel").html().length))
+    );
+  }
+
+  if (!ignoreSame && global.prev_channel === $("#channel").html()) {
+    return false;
+  }
+  global.prev_channel = $("#channel").html();
+  return $("#channel").html();
 }

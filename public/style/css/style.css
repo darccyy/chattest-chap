@@ -1,3 +1,11 @@
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 body {
   background-color: #222;
 }
@@ -19,6 +27,7 @@ button {
   font-size: 20px;
   border-radius: 5px;
   background-color: #333;
+  cursor: pointer;
 }
 .icon:hover {
   background-color: #383838;
@@ -34,7 +43,6 @@ input[type=text] {
 
 #header {
   height: 30px;
-  margin-top: -5px;
   margin-bottom: 10px;
 }
 #header h1 {
@@ -42,17 +50,30 @@ input[type=text] {
   font-weight: 500;
   font-size: 20px;
 }
-#header h1 input {
-  margin-left: -10px;
+#header h1 .channel-contain {
+  display: inline;
+}
+#header h1 .channel-contain #channel {
+  width: auto;
+  margin: 0 -7px;
+  padding: 0 2px;
   font-size: 20px;
   outline: none;
   background-color: #0000;
+}
+#header h1 .channel-contain #channel:focus, #header h1 .channel-contain #channel:hover {
+  text-decoration: underline;
+}
+#header h1 .channel-contain #channel:empty {
+  padding: 0 3px;
+  margin-right: 0px;
 }
 #header .top-bar {
   position: absolute;
   display: inline;
   height: 30px;
   right: 5px;
+  top: 4px;
 }
 #header .top-bar .name {
   font-size: 20px;
@@ -60,6 +81,18 @@ input[type=text] {
 #header .top-bar .button-contain {
   display: inline;
   height: 30px;
+}
+
+#btn-refresh svg {
+  animation-name: spin;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-play-state: paused;
+  color: white;
+}
+#btn-refresh.active svg {
+  animation-play-state: running;
 }
 
 .msg-contain {
@@ -184,7 +217,7 @@ footer img {
     right: 3px;
   }
 }
-@media (max-width: 200px) {
+@media (max-width: 180px) {
   #header .top-bar .name {
     display: none;
   }

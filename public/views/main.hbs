@@ -24,11 +24,16 @@
 
     <header id="header">
       <h1>
-        <span class="title">
-          chattest-chap/
+        <span class="title" title="Chattest Chap">
+          Chattest Chap
         </span>
 
-        <input type="text" id="channel" value="root" oninput="refresh()" onchange="refresh()" />
+        <section class="channel-contain" onclick="focusChannel()">
+          &lt;
+          <span type="text" id="channel" oninput="changeChannel()" onchange="changeChannel()" title="Channel"
+            contenteditable="true" spellcheck="false" onblur="changeChannelBlur()">root</span>
+          &gt;
+        </section>
       </h1>
 
       <div class="top-bar">
@@ -45,7 +50,7 @@
         </span>
 
         <div class="button-contain">
-          <button onclick="location.href += 'logoff'" class="icon">
+          <button onclick="location.href += 'logoff'" class="icon" id="btn-logoff">
             <i class="fas fa-sign-out-alt"></i>
           </button>
 
@@ -58,7 +63,7 @@
           <div class="button-contain">
             {{/if}}
 
-            <button onclick="refresh()" class="icon">
+            <button onclick="refresh()" class="icon" id="btn-refresh">
               <i class="fa fa-refresh"></i>
             </button>
           </div>
